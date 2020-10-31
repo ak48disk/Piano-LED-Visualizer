@@ -60,8 +60,8 @@
 	<led_animation>Scanner</led_animation>
 	
 	<led_count>181</led_count>
-	<shift>0</shift>
-	<invert>1</invert>
+	<shift>1</shift>
+	<led_invert>1</led_invert>
 	
 	
 </settings>
