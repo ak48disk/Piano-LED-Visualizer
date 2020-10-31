@@ -21,6 +21,7 @@ import fcntl
 os.chdir(sys.path[0])
 import mido
 from mido import MidiFile, Message, tempo2bpm, MidiTrack,MetaMessage
+from mido.sockets import PortServer
 from neopixel import *
 import argparse
 import threading
@@ -45,6 +46,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
 parser.add_argument('-d', '--display', type=str, help="choose type of display: '1in44' (default) | '1in3'")
 args = parser.parse_args()
+
+port_server = PortServer('0.0.0.0', 8080)
 
 class UserSettings:
     def __init__(self):
@@ -1318,7 +1321,7 @@ def screensaver():
     download_start = 0
     
     try:
-        midiports.inport.poll()
+        port_server.poll()
     except:
         pass
     while True:
@@ -1413,7 +1416,7 @@ def screensaver():
         time.sleep(delay)
         i += 1
         try:
-            if (midiports.inport.poll() != None):
+            if (port_server.poll() != None):
                 menu.screensaver_is_running = False
                 saving.start_time = time.time()
                 menu.screen_status = 1
@@ -2079,7 +2082,7 @@ while True:
             n += 1 
     try:
         if(len(saving.is_playing_midi) == 0):
-            midiports.midipending = midiports.inport.iter_pending()
+            midiports.midipending = port_server.iter_pending()
         else:
             midiports.midipending = midiports.pending_queue
     except:
