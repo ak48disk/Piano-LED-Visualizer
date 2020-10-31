@@ -55,23 +55,22 @@ class Server:
 		self.pending_messages = []
 
 	def server_loop(self):
-		while True:
-			# Handle connections.
-			client = self.port_server.accept(block=False)
-			if client:
-				print('Connection from {}'.format(client.name))
-				self.port_clients.append(client)
+		# Handle connections.
+		client = self.port_server.accept(block=False)
+		if client:
+			print('Connection from {}'.format(client.name))
+			self.port_clients.append(client)
 
-			# Receive messages.
-			for client in self.port_clients:
-				if client.closed:
-					continue
-				try:
-					for message in client.iter_pending():
-						self.pending_messages.append(message)
-						print('Received {} from {}'.format(message, client))
-				except:
-					pass
+		# Receive messages.
+		for client in self.port_clients:
+			if client.closed:
+				continue
+			try:
+				for message in client.iter_pending():
+					self.pending_messages.append(message)
+					print('Received {} from {}'.format(message, client))
+			except:
+				pass
 
 	def iter_pending(self):
 		msgs = self.pending_messages
