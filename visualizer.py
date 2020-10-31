@@ -2163,8 +2163,8 @@ while True:
         
         note_position = (note - 20)*2 - note_offset
 		
-		if ledstrip.invert:
-			note_position = ledstrip.led_number - note_position - 1
+        if ledstrip.invert:
+            note_position = ledstrip.led_number - note_position - 1
         
         if((note_position > ledstrip.led_number or note_position < 0) and control_change == False):
             continue
