@@ -47,7 +47,38 @@ parser.add_argument('-c', '--clear', action='store_true', help='clear the displa
 parser.add_argument('-d', '--display', type=str, help="choose type of display: '1in44' (default) | '1in3'")
 args = parser.parse_args()
 
-port_server = PortServer('0.0.0.0', 8080)
+
+class Server:
+	def __init__(self):
+		self.port_server = PortServer('0.0.0.0', 8080)
+		self.port_clients = []
+		self.pending_messages = []
+
+	def server_loop():
+		while True:
+			# Handle connections.
+			client = self.port_server.accept(block=False)
+			if client:
+				print('Connection from {}'.format(client.name))
+				self.port_clients.append(client)
+
+			for i, client in reversed(enumerate(self.port_clients)):
+				if client.closed:
+					print('{} disconnected'.format(client.name))
+					del self.port_clients[i]
+
+			# Receive messages.
+			for client in self.port_clients:
+				for message in client.iter_pending():
+					self.pending_messages.append(message)
+					print('Received {} from {}'.format(message, client))
+
+	def iter_pending():
+		msgs = self.pending_messages
+		self.pending_messages = []
+		return msgs
+
+server = Server()
 
 class UserSettings:
     def __init__(self):
@@ -1954,7 +1985,11 @@ timeshift_start = time.time()
 
 fastColorWipe(ledstrip.strip, True)
 
-while True:   
+while True:
+    try:
+        server.server_loop()
+    except:
+        pass
     #screensaver
     if(int(menu.screensaver_delay) > 0):
         if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
@@ -2082,7 +2117,7 @@ while True:
             n += 1 
     try:
         if(len(saving.is_playing_midi) == 0):
-            midiports.midipending = port_server.iter_pending()
+            midiports.midipending = server.iter_pending()
         else:
             midiports.midipending = midiports.pending_queue
     except:
