@@ -118,6 +118,7 @@ class LedStrip:
         
         self.brightness_percent = int(usersettings.get_setting_value("brightness_percent"))
         self.led_number = int(usersettings.get_setting_value("led_count"))
+		self.invert = int(usersettings.get_setting_value("led_invert"))
         self.shift = int(usersettings.get_setting_value("shift"))
         
         self.brightness = 255 * self.brightness_percent / 100    
@@ -2123,7 +2124,7 @@ while True:
         continue
     #loop through incoming midi messages
     for msg in midiports.midipending:
-    
+
         last_activity = time.time()     
         note = find_between(str(msg), "note=", " ")
         original_note = note
@@ -2161,6 +2162,9 @@ while True:
         note_offset -= ledstrip.shift
         
         note_position = (note - 20)*2 - note_offset
+		
+		if ledstrip.invert:
+			note_position = ledstrip.led_number - note_position - 1
         
         if((note_position > ledstrip.led_number or note_position < 0) and control_change == False):
             continue
