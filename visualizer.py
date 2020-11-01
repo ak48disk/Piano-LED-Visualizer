@@ -2166,7 +2166,7 @@ while True:
                 ledsettings = LedSettings()            
     
     # cpu saving, after 1m of inactivity
-    if (idle_time > 0 and time.time() - idle_time > 60)
+    if idle_time > 0 and time.time() - idle_time > 60:
         time.sleep(0.001)
 
     #loop through incoming midi messages
