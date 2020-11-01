@@ -15,6 +15,7 @@ while True:
                         server.send(msg)
                     for msg in server.iter_pending():
                         output.send(msg)
+                    sleep()
 
     except Exception as e:
         print(e)
