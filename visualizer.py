@@ -1339,6 +1339,7 @@ def shift(l, n):
     return l[n:] + l[:n]    
 
 def screensaver():
+    return
     delay = 0.1
     interval  = 3 / float(delay)
     i = 0
