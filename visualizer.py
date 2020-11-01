@@ -1991,75 +1991,7 @@ while True:
         server.server_loop()
     except:
         pass
-    #screensaver
-    if(int(menu.screensaver_delay) > 0):
-        if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
-            screensaver()    
-    try:
-            elapsed_time = time.time() - saving.start_time
-    except:
-            elapsed_time = 0
-    if(display_cycle >= 60):
-        display_cycle = 0
-        if(saving.isrecording == True):
-            screen_hold_time = 12
-        else:
-            screen_hold_time = 3
-        if(elapsed_time > screen_hold_time):
-            menu.show()
-            timeshift_start = time.time()     
-    display_cycle += 1
-    
-    if((time.time() - last_activity) > 1):
-        usersettings.save_changes()        
-        if(usersettings.pending_reset == True):
-            usersettings.pending_reset = False
-            ledstrip = LedStrip()
-            menu = MenuLCD("menu.xml")
-            menu.show()            
-            ledsettings = LedSettings()            
-    
-    if GPIO.input(KEYUP) == 0:
-        last_activity = time.time()
-        menu.change_pointer(0)
-        while GPIO.input(KEYUP) == 0:
-            time.sleep(0.001)
-    if GPIO.input(KEYDOWN) == 0:
-        last_activity = time.time()
-        menu.change_pointer(1)
-        while GPIO.input(KEYDOWN) == 0:
-            time.sleep(0.001)
-    if GPIO.input(KEY1) == 0:
-        last_activity = time.time()
-        menu.enter_menu()
-        while GPIO.input(KEY1) == 0:
-            time.sleep(0.001)
-    if GPIO.input(KEY2) == 0:
-        last_activity = time.time()
-        menu.go_back()
-        if(menu.screensaver_is_running == False):
-            fastColorWipe(ledstrip.strip, True)
-        while GPIO.input(KEY2) == 0:
-            time.sleep(0.01)
-    if GPIO.input(KEY3) == 0:
-        last_activity = time.time()
-        if(ledsettings.sequence_active == True):
-            ledsettings.set_sequence(0, 1)
-        while GPIO.input(KEY3) == 0:
-            time.sleep(0.01)
-    if GPIO.input(KEYLEFT) == 0:
-        last_activity = time.time()
-        menu.change_value("LEFT")
-        time.sleep(0.02)
-    if GPIO.input(KEYRIGHT) == 0:
-        last_activity = time.time()
-        menu.change_value("RIGHT")
-        time.sleep(0.02)
-    if GPIO.input(JPRESS) == 0:
-        last_activity = time.time()
-        menu.speed_change()
-        while GPIO.input(JPRESS) == 0:
-            time.sleep(0.01)
+
 
     red = ledsettings.get_color("Red")
     green = ledsettings.get_color("Green")
@@ -2123,6 +2055,78 @@ while True:
             midiports.midipending = midiports.pending_queue
     except:
         continue
+ 
+    if len(midiports.midipending) == 0:
+        #screensaver
+        if(int(menu.screensaver_delay) > 0):
+            if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
+                screensaver()    
+        try:
+                elapsed_time = time.time() - saving.start_time
+        except:
+                elapsed_time = 0
+        if(display_cycle >= 60):
+            display_cycle = 0
+            if(saving.isrecording == True):
+                screen_hold_time = 12
+            else:
+                screen_hold_time = 3
+            if(elapsed_time > screen_hold_time):
+                menu.show()
+                timeshift_start = time.time()     
+        display_cycle += 1
+        
+        if((time.time() - last_activity) > 1):
+            usersettings.save_changes()        
+            if(usersettings.pending_reset == True):
+                usersettings.pending_reset = False
+                ledstrip = LedStrip()
+                menu = MenuLCD("menu.xml")
+                menu.show()            
+                ledsettings = LedSettings()            
+        
+        if GPIO.input(KEYUP) == 0:
+            last_activity = time.time()
+            menu.change_pointer(0)
+            while GPIO.input(KEYUP) == 0:
+                time.sleep(0.001)
+        if GPIO.input(KEYDOWN) == 0:
+            last_activity = time.time()
+            menu.change_pointer(1)
+            while GPIO.input(KEYDOWN) == 0:
+                time.sleep(0.001)
+        if GPIO.input(KEY1) == 0:
+            last_activity = time.time()
+            menu.enter_menu()
+            while GPIO.input(KEY1) == 0:
+                time.sleep(0.001)
+        if GPIO.input(KEY2) == 0:
+            last_activity = time.time()
+            menu.go_back()
+            if(menu.screensaver_is_running == False):
+                fastColorWipe(ledstrip.strip, True)
+            while GPIO.input(KEY2) == 0:
+                time.sleep(0.01)
+        if GPIO.input(KEY3) == 0:
+            last_activity = time.time()
+            if(ledsettings.sequence_active == True):
+                ledsettings.set_sequence(0, 1)
+            while GPIO.input(KEY3) == 0:
+                time.sleep(0.01)
+        if GPIO.input(KEYLEFT) == 0:
+            last_activity = time.time()
+            menu.change_value("LEFT")
+            time.sleep(0.02)
+        if GPIO.input(KEYRIGHT) == 0:
+            last_activity = time.time()
+            menu.change_value("RIGHT")
+            time.sleep(0.02)
+        if GPIO.input(JPRESS) == 0:
+            last_activity = time.time()
+            menu.speed_change()
+            while GPIO.input(JPRESS) == 0:
+                time.sleep(0.01)
+
     #loop through incoming midi messages
     for msg in midiports.midipending:
 
