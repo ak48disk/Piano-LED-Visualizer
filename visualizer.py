@@ -2155,7 +2155,7 @@ while True:
         #changing offset to adjust the distance between the LEDs to the key spacing
         if(note > 92):
             note_offset = 2
-        elif(note > 55):
+        elif(note > 68):
             note_offset = 1
         else:
             note_offset = 0

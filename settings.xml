@@ -54,14 +54,14 @@
 	<network_usage>0</network_usage>
 	<sd_card_space>0</sd_card_space>
 	
-	<screensaver_delay>10</screensaver_delay>
+	<screensaver_delay>0</screensaver_delay>
 	<screen_off_delay>0</screen_off_delay>
 	<led_animation_delay>0</led_animation_delay>
 	<led_animation>Scanner</led_animation>
 	
 	<led_count>181</led_count>
-	<shift>0</shift>
-	<invert>1</invert>
+	<shift>1</shift>
+	<led_invert>1</led_invert>
 	
 	
 </settings>
