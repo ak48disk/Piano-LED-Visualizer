@@ -80,6 +80,15 @@ class Server:
 	def poll(self):
 		if len(self.pending_messages) > 0:
 		    return self.pending_messages[0]
+            
+    def send(self, msg):
+        for client in self.port_clients:
+            if client.closed:
+				continue
+            try:
+				client.send(msg)
+			except:
+				pass
 
 server = Server()
 
@@ -1322,7 +1331,7 @@ def play_midi(song_path):
                 output_time_start = time.time()                   
             
                 if not message.is_meta:
-                    midiports.playport.send(message)
+                    server.send(message)
                     midiports.pending_queue.append(message.copy(time=0))
                 
             else:                
@@ -2189,7 +2198,7 @@ while True:
                     pass        
 
         #changing offset to adjust the distance between the LEDs to the key spacing
-        if(note > 92):
+        if(note > 108):
             note_offset = 2
         elif(note > 68):
             note_offset = 1
