@@ -34,7 +34,7 @@ def singleton():
     try:
         fcntl.flock(fh,fcntl.LOCK_EX|fcntl.LOCK_NB)
     except:
-        restart_script()
+        sys.exit(0)
 
 def restart_script():
     python = sys.executable
