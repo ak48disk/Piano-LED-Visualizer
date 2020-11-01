@@ -49,46 +49,46 @@ args = parser.parse_args()
 
 
 class Server:
-	def __init__(self):
-		self.port_server = PortServer('0.0.0.0', 8080)
-		self.port_clients = []
-		self.pending_messages = []
+    def __init__(self):
+        self.port_server = PortServer('0.0.0.0', 8080)
+        self.port_clients = []
+        self.pending_messages = []
 
-	def server_loop(self):
-		# Handle connections.
-		client = self.port_server.accept(block=False)
-		if client:
-			print('Connection from {}'.format(client.name))
-			self.port_clients.append(client)
+    def server_loop(self):
+        # Handle connections.
+        client = self.port_server.accept(block=False)
+        if client:
+            print('Connection from {}'.format(client.name))
+            self.port_clients.append(client)
 
-		# Receive messages.
-		for client in self.port_clients:
-			if client.closed:
-				continue
-			try:
-				for message in client.iter_pending():
-					self.pending_messages.append(message)
-					print('Received {} from {}'.format(message, client))
-			except:
-				pass
+        # Receive messages.
+        for client in self.port_clients:
+            if client.closed:
+                continue
+            try:
+                for message in client.iter_pending():
+                    self.pending_messages.append(message)
+                    print('Received {} from {}'.format(message, client))
+            except:
+                pass
 
-	def iter_pending(self):
-		msgs = self.pending_messages
-		self.pending_messages = []
-		return msgs
+    def iter_pending(self):
+        msgs = self.pending_messages
+        self.pending_messages = []
+        return msgs
 
-	def poll(self):
-		if len(self.pending_messages) > 0:
-		    return self.pending_messages[0]
+    def poll(self):
+        if len(self.pending_messages) > 0:
+            return self.pending_messages[0]
             
     def send(self, msg):
         for client in self.port_clients:
             if client.closed:
-				continue
+                continue
             try:
-				client.send(msg)
-			except:
-				pass
+                client.send(msg)
+            except:
+                pass
 
 server = Server()
 
@@ -598,7 +598,7 @@ class MenuLCD:
             element.appendChild(self.DOMTree.createTextNode(""))
             element.setAttribute("text"  , "Key range"+str(i))     
             mc = self.DOMTree.getElementsByTagName("Multicolor")[0]
-            mc.appendChild(element)	
+            mc.appendChild(element) 
 
             element = self.DOMTree.createElement("Key_range"+str(i))        
             element.appendChild(self.DOMTree.createTextNode(""))
@@ -2207,7 +2207,7 @@ while True:
         note_offset -= ledstrip.shift
         
         note_position = (note - 20)*2 - note_offset
-		
+        
         if ledstrip.invert:
             note_position = ledstrip.led_number - note_position - 1
         
