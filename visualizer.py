@@ -77,6 +77,10 @@ class Server:
 		self.pending_messages = []
 		return msgs
 
+	def poll(self):
+		if len(self.pending_messages) > 0:
+		    return self.pending_messages[0]
+
 server = Server()
 
 class UserSettings:
@@ -1339,7 +1343,6 @@ def shift(l, n):
     return l[n:] + l[:n]    
 
 def screensaver():
-    return
     delay = 0.1
     interval  = 3 / float(delay)
     i = 0
@@ -1353,7 +1356,7 @@ def screensaver():
     download_start = 0
     
     try:
-        port_server.poll()
+        server.poll()
     except:
         pass
     while True:
@@ -1412,9 +1415,12 @@ def screensaver():
         else:
             ram_usage = 0
 
-        if(menu.screensaver_settings["temp"] == "1"):        
-            temp = find_between(str(psutil.sensors_temperatures()["cpu-thermal"]), "current=", ",")
-            temp = round(float(temp), 1)
+        if(menu.screensaver_settings["temp"] == "1"):
+            try:
+                temp = find_between(str(psutil.sensors_temperatures()["cpu-thermal"]), "current=", ",")
+                temp = round(float(temp), 1)
+            except:
+                temp = 0
         else:
             temp = 0
         
@@ -1448,7 +1454,8 @@ def screensaver():
         time.sleep(delay)
         i += 1
         try:
-            if (port_server.poll() != None):
+            server.server_loop()
+            if (server.poll() != None):
                 menu.screensaver_is_running = False
                 saving.start_time = time.time()
                 menu.screen_status = 1
@@ -2119,7 +2126,7 @@ while True:
         #screensaver
         if(int(menu.screensaver_delay) > 0):
             if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
-                screensaver()    
+                screensaver()  
         try:
                 elapsed_time = time.time() - saving.start_time
         except:
@@ -2132,10 +2139,9 @@ while True:
                 screen_hold_time = 3
             if(elapsed_time > screen_hold_time):
                 menu.show()
-                timeshift_start = time.time()     
+                timeshift_start = time.time()
+                saving.start_time = time.time()
         display_cycle += 1
-        if not key_pressed:
-             time.sleep(0.01)
         
         if((time.time() - last_activity) > 1):
             usersettings.save_changes()        
