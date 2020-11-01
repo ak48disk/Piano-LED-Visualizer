@@ -2062,8 +2062,60 @@ while True:
     elif idle_time == 0:
         idle_time = time.time()
 
+    key_pressed = False
+
+    if GPIO.input(KEYUP) == 0:
+        last_activity = time.time()
+        menu.change_pointer(0)
+        while GPIO.input(KEYUP) == 0:
+            time.sleep(0.001)
+        key_pressed = True
+    if GPIO.input(KEYDOWN) == 0:
+        last_activity = time.time()
+        menu.change_pointer(1)
+        while GPIO.input(KEYDOWN) == 0:
+            time.sleep(0.001)
+        key_pressed = True
+    if GPIO.input(KEY1) == 0:
+        last_activity = time.time()
+        menu.enter_menu()
+        while GPIO.input(KEY1) == 0:
+            time.sleep(0.001)
+        key_pressed = True
+    if GPIO.input(KEY2) == 0:
+        last_activity = time.time()
+        menu.go_back()
+        if(menu.screensaver_is_running == False):
+            fastColorWipe(ledstrip.strip, True)
+        while GPIO.input(KEY2) == 0:
+            time.sleep(0.01)
+        key_pressed = True
+    if GPIO.input(KEY3) == 0:
+        last_activity = time.time()
+        if(ledsettings.sequence_active == True):
+            ledsettings.set_sequence(0, 1)
+        while GPIO.input(KEY3) == 0:
+            time.sleep(0.01)
+        key_pressed = True
+    if GPIO.input(KEYLEFT) == 0:
+        last_activity = time.time()
+        menu.change_value("LEFT")
+        time.sleep(0.02)
+        key_pressed = True
+    if GPIO.input(KEYRIGHT) == 0:
+        last_activity = time.time()
+        menu.change_value("RIGHT")
+        time.sleep(0.02)
+        key_pressed = True
+    if GPIO.input(JPRESS) == 0:
+        last_activity = time.time()
+        menu.speed_change()
+        while GPIO.input(JPRESS) == 0:
+            time.sleep(0.01)
+        key_pressed = True
+
     # handle menu only after keyboard is idle for 2 seconds, to be more responsive
-    if idle_time > 0 and time.time() - idle_time > 2:
+    if key_pressed or (idle_time > 0 and time.time() - idle_time > 2):
         #screensaver
         if(int(menu.screensaver_delay) > 0):
             if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
@@ -2082,6 +2134,8 @@ while True:
                 menu.show()
                 timeshift_start = time.time()     
         display_cycle += 1
+        if not key_pressed:
+             time.sleep(0.01)
         
         if((time.time() - last_activity) > 1):
             usersettings.save_changes()        
@@ -2092,47 +2146,7 @@ while True:
                 menu.show()            
                 ledsettings = LedSettings()            
         
-        if GPIO.input(KEYUP) == 0:
-            last_activity = time.time()
-            menu.change_pointer(0)
-            while GPIO.input(KEYUP) == 0:
-                time.sleep(0.001)
-        if GPIO.input(KEYDOWN) == 0:
-            last_activity = time.time()
-            menu.change_pointer(1)
-            while GPIO.input(KEYDOWN) == 0:
-                time.sleep(0.001)
-        if GPIO.input(KEY1) == 0:
-            last_activity = time.time()
-            menu.enter_menu()
-            while GPIO.input(KEY1) == 0:
-                time.sleep(0.001)
-        if GPIO.input(KEY2) == 0:
-            last_activity = time.time()
-            menu.go_back()
-            if(menu.screensaver_is_running == False):
-                fastColorWipe(ledstrip.strip, True)
-            while GPIO.input(KEY2) == 0:
-                time.sleep(0.01)
-        if GPIO.input(KEY3) == 0:
-            last_activity = time.time()
-            if(ledsettings.sequence_active == True):
-                ledsettings.set_sequence(0, 1)
-            while GPIO.input(KEY3) == 0:
-                time.sleep(0.01)
-        if GPIO.input(KEYLEFT) == 0:
-            last_activity = time.time()
-            menu.change_value("LEFT")
-            time.sleep(0.02)
-        if GPIO.input(KEYRIGHT) == 0:
-            last_activity = time.time()
-            menu.change_value("RIGHT")
-            time.sleep(0.02)
-        if GPIO.input(JPRESS) == 0:
-            last_activity = time.time()
-            menu.speed_change()
-            while GPIO.input(JPRESS) == 0:
-                time.sleep(0.01)
+
 
     #loop through incoming midi messages
     for msg in midiports.midipending:
