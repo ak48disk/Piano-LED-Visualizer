@@ -1977,6 +1977,7 @@ ledsettings = LedSettings()
 
 z = 0
 display_cycle = 0
+idle_time = 0
 
 last_activity = time.time()
 
@@ -2056,7 +2057,13 @@ while True:
     except:
         continue
  
-    if len(midiports.midipending) == 0:
+    if len(midiports.midipending) > 0:
+        idle_time = 0
+    elif idle_time == 0:
+        idle_time = time.time()
+
+    # handle menu only after keyboard is idle for 2 seconds, to be more responsive
+    if idle_time > 0 and time.time() - idle_time > 2:
         #screensaver
         if(int(menu.screensaver_delay) > 0):
             if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
