@@ -2071,55 +2071,56 @@ while True:
 
     key_pressed = False
 
-    if GPIO.input(KEYUP) == 0:
-        last_activity = time.time()
-        menu.change_pointer(0)
-        while GPIO.input(KEYUP) == 0:
-            time.sleep(0.001)
-        key_pressed = True
-    if GPIO.input(KEYDOWN) == 0:
-        last_activity = time.time()
-        menu.change_pointer(1)
-        while GPIO.input(KEYDOWN) == 0:
-            time.sleep(0.001)
-        key_pressed = True
-    if GPIO.input(KEY1) == 0:
-        last_activity = time.time()
-        menu.enter_menu()
-        while GPIO.input(KEY1) == 0:
-            time.sleep(0.001)
-        key_pressed = True
-    if GPIO.input(KEY2) == 0:
-        last_activity = time.time()
-        menu.go_back()
-        if(menu.screensaver_is_running == False):
-            fastColorWipe(ledstrip.strip, True)
-        while GPIO.input(KEY2) == 0:
-            time.sleep(0.01)
-        key_pressed = True
-    if GPIO.input(KEY3) == 0:
-        last_activity = time.time()
-        if(ledsettings.sequence_active == True):
-            ledsettings.set_sequence(0, 1)
-        while GPIO.input(KEY3) == 0:
-            time.sleep(0.01)
-        key_pressed = True
-    if GPIO.input(KEYLEFT) == 0:
-        last_activity = time.time()
-        menu.change_value("LEFT")
-        time.sleep(0.02)
-        key_pressed = True
-    if GPIO.input(KEYRIGHT) == 0:
-        last_activity = time.time()
-        menu.change_value("RIGHT")
-        time.sleep(0.02)
-        key_pressed = True
-    if GPIO.input(JPRESS) == 0:
-        last_activity = time.time()
-        menu.speed_change()
-        while GPIO.input(JPRESS) == 0:
-            time.sleep(0.01)
-        key_pressed = True
+    if len(midiports.midipending) == 0:
+        if GPIO.input(KEYUP) == 0:
+            last_activity = time.time()
+            menu.change_pointer(0)
+            while GPIO.input(KEYUP) == 0:
+                time.sleep(0.001)
+            key_pressed = True
+        if GPIO.input(KEYDOWN) == 0:
+            last_activity = time.time()
+            menu.change_pointer(1)
+            while GPIO.input(KEYDOWN) == 0:
+                time.sleep(0.001)
+            key_pressed = True
+        if GPIO.input(KEY1) == 0:
+            last_activity = time.time()
+            menu.enter_menu()
+            while GPIO.input(KEY1) == 0:
+                time.sleep(0.001)
+            key_pressed = True
+        if GPIO.input(KEY2) == 0:
+            last_activity = time.time()
+            menu.go_back()
+            if(menu.screensaver_is_running == False):
+                fastColorWipe(ledstrip.strip, True)
+            while GPIO.input(KEY2) == 0:
+                time.sleep(0.01)
+            key_pressed = True
+        if GPIO.input(KEY3) == 0:
+            last_activity = time.time()
+            if(ledsettings.sequence_active == True):
+                ledsettings.set_sequence(0, 1)
+            while GPIO.input(KEY3) == 0:
+                time.sleep(0.01)
+            key_pressed = True
+        if GPIO.input(KEYLEFT) == 0:
+            last_activity = time.time()
+            menu.change_value("LEFT")
+            time.sleep(0.02)
+            key_pressed = True
+        if GPIO.input(KEYRIGHT) == 0:
+            last_activity = time.time()
+            menu.change_value("RIGHT")
+            time.sleep(0.02)
+            key_pressed = True
+        if GPIO.input(JPRESS) == 0:
+            last_activity = time.time()
+            menu.speed_change()
+            while GPIO.input(JPRESS) == 0:
+                time.sleep(0.01)
+            key_pressed = True
 
     # handle menu only after keyboard is idle for 2 seconds, to be more responsive
     if key_pressed or (idle_time > 0 and time.time() - idle_time > 2):
