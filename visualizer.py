@@ -55,6 +55,9 @@ class Server:
         self.pending_messages = []
 
     def server_loop(self):
+        # Remove closed clients
+        self.port_clients = [c for c in self.port_clients if not c.closed]
+
         # Handle connections.
         client = self.port_server.accept(block=False)
         if client:
@@ -1426,7 +1429,7 @@ def screensaver():
 
         if(menu.screensaver_settings["temp"] == "1"):
             try:
-                temp = find_between(str(psutil.sensors_temperatures()["cpu-thermal"]), "current=", ",")
+                temp = psutil.sensors_temperatures().values()[0][0].current
                 temp = round(float(temp), 1)
             except:
                 temp = 0
@@ -2165,8 +2168,8 @@ while True:
                 menu.show()            
                 ledsettings = LedSettings()            
     
-    # cpu saving, after 1m of inactivity
-    if idle_time > 0 and time.time() - idle_time > 60:
+    # cpu saving, after inactivity
+    if idle_time > 0 and time.time() - idle_time > 15:
         time.sleep(0.001)
 
     #loop through incoming midi messages
