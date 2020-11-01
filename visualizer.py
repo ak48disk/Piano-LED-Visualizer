@@ -1994,6 +1994,9 @@ timeshift_start = time.time()
 
 fastColorWipe(ledstrip.strip, True)
 
+# disable wifi power management to get better performance
+call("sudo iwconfig wlan0 power off", shell=True)
+
 while True:
     try:
         server.server_loop()
