@@ -2135,13 +2135,13 @@ while True:
                 elapsed_time = time.time() - saving.start_time
         except:
                 elapsed_time = 0
-        if(display_cycle >= 60):
+        if key_pressed or (display_cycle >= 60):
             display_cycle = 0
             if(saving.isrecording == True):
                 screen_hold_time = 12
             else:
                 screen_hold_time = 3
-            if(elapsed_time > screen_hold_time):
+            if key_pressed or (elapsed_time > screen_hold_time):
                 menu.show()
                 timeshift_start = time.time()
                 saving.start_time = time.time()
