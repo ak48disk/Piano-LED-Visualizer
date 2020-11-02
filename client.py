@@ -1,5 +1,6 @@
 import mido
 from mido.sockets import connect
+import time
 
 host = 'raspberrypi.local'
 
@@ -11,11 +12,12 @@ while True:
         with connect(host, 8080) as server:
             with mido.open_input() as input:
                 with mido.open_output() as output:
-                    for msg in input.iter_pending():
-                        server.send(msg)
-                    for msg in server.iter_pending():
-                        output.send(msg)
-                    sleep()
+                    while True:
+                        for msg in input.iter_pending():
+                            server.send(msg)
+                        for msg in server.iter_pending():
+                            output.send(msg)
+                        sleep()
 
     except Exception as e:
         print(e)

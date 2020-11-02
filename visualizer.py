@@ -2086,7 +2086,7 @@ while True:
 
     key_pressed = False
 
-    if len(midiports.midipending) == 0:
+    if (len(midiports.midipending) == 0) or len(saving.is_playing_midi) > 0:
         if GPIO.input(KEYUP) == 0:
             last_activity = time.time()
             menu.change_pointer(0)
@@ -2138,7 +2138,7 @@ while True:
             key_pressed = True
 
     # handle menu only after keyboard is idle for 2 seconds, to be more responsive
-    if key_pressed or (idle_time > 0 and time.time() - idle_time > 2):
+    if key_pressed or len(saving.is_playing_midi) > 0 or (idle_time > 0 and time.time() - idle_time > 2):
         #screensaver
         if(int(menu.screensaver_delay) > 0):
             if((time.time() - last_activity) > (int(menu.screensaver_delay) * 60)):
